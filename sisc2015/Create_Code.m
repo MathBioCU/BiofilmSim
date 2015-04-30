@@ -1,0 +1,1 @@
+codegen residualvel3Dper2.m -args {coder.typeof(ux,[129,65,65],[0,0,0]),coder.typeof(uy,[129,65,65],[0,0,0]),coder.typeof(uz,[129,65,65],[0,0,0]),coder.typeof(Efx,[129,65,65],[0,0,0]),coder.typeof(Efy,[129,65,65],[0,0,0]),coder.typeof(Efz,[129,65,65],[0,0,0]),vcoef{1}}
