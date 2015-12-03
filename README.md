@@ -8,7 +8,7 @@ Note: the Analyze_Data2D does not return the right results. Instead, use the fol
 
 [t2,m2]=max(v0*visc0/charLength*vShear-eShear); %or min
 
-delta=(t-t2)*w;
+delta=(t-t2)*w*dt;
 
 G1=m2/m*cos(delta);
 
