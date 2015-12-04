@@ -1,7 +1,7 @@
 function [Edens,viscmat, viscmatmid]=dens_visc(h,x,y,z,X,initdensity,addldens,d0mean,numOfnonzero,zlength,ylength, xlength,visc,addlvisc,levelsP,Em,En,Ep)
 Edens{1}.dx=h;
 Edens{1}.Edensin=transferLtoEdens3Dper_e2a(h,x,y,z,X,initdensity,addldens,d0mean,numOfnonzero,zlength,xlength);
-viscmat{1}=transferLtoEvisc3Dper_e2a(h,x,y,z,X,visc,addlvisc,numOfnonzero,1,zlength,xlength);
+viscmat{1}=transferLtoEvisc3Dper_e4a(h,x,y,z,X,visc,addlvisc,numOfnonzero,1,zlength,xlength);
         Edens{1}.Edensmidlr=(Edens{1}.Edensin(:,2:En,:)+Edens{1}.Edensin(:,1:En-1,:))/2;
         Edens{1}.Edensmidud=(Edens{1}.Edensin(2:Em,:,:)+Edens{1}.Edensin(1:Em-1,:,:))/2;
         Edens{1}.Edensmidfb=(Edens{1}.Edensin(:,:,2:Ep)+Edens{1}.Edensin(:,:,1:Ep-1))/2;

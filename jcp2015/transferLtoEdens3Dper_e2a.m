@@ -201,7 +201,7 @@ for c1=1:numOfnonzero
     
 end
 
-Edens(Edens>addldens+initdensity)=addldens+initdensity;
+%Edens(Edens>addldens+initdensity)=addldens+initdensity;
 
 Edens2=zeros(Em,En,Ep);
 Edens2(:,1:En-1,1:Ep-1)=Edens;

@@ -1,6 +1,6 @@
 function [Edens,viscmat,viscmatmid]=DensVisc(addlvisc,addldens,h,x,y,z,X,visc,numOfnonzero,xlength,zlength,Em,En,Ep,d0mean,initdensity,levelsV,viscmat,Edens)
 if addlvisc>0 || addldens>0 || h>0
-        viscmat{1}=transferLtoEvisc3Dper_e2a(h,x,y,z,X,visc,addlvisc,numOfnonzero,1,zlength,xlength);
+        viscmat{1}=transferLtoEvisc3Dper_e4a(h,x,y,z,X,visc,addlvisc,numOfnonzero,1,zlength,xlength);
         viscmatmid{1}.lr=(viscmat{1}(:,2:En,:)+viscmat{1}(:,1:En-1,:))/2;
         viscmatmid{1}.ud=(viscmat{1}(2:Em,:,:)+viscmat{1}(1:Em-1,:,:))/2;
         viscmatmid{1}.fb=(viscmat{1}(:,:,2:Ep)+viscmat{1}(:,:,1:Ep-1))/2;

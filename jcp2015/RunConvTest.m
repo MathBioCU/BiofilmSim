@@ -21,7 +21,7 @@ for ii=1:4
     numtimesteps=125*2^(ii-1);
     charLength=10*10^-6;
     fmax=25000;
-    addlvisc=0;
+    addlvisc=249;
     connectdist=3/18.5;
     sigma0=0;
     JMain3DSim7

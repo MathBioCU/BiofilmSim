@@ -17,7 +17,7 @@ levelsP=5;
 
 mult=10^-6;
 charLength=10*10^-6;
-[Xb,Yb,Zb]=importfile('37 Deg Test 2, Live Cells.txt');
+[Xb,Yb,Zb]=importfile('~/Documents/Biofilm_Research/Data/37DegTest2LiveCells.txt');
 X=[Xb,Zb,Yb]*mult/charLength;
 
 mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2))]);
@@ -57,7 +57,7 @@ eust=eu/st;
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 initdensity=1;
-addldens=0.0;%
+addldens=0.12;%
 visc=1;
 
 xvec=0:h:xlength;
@@ -97,7 +97,7 @@ Xupper=X(X(:,3)>=ylength-bthickness,:);
 
 Xlower=X(X(:,3)<=bthickness,:);
 
- X=[0,0,0];% use to test without biofilm
+ %X=[0,0,0];% use to test without biofilm
 
 
 lower=find(X(:,3)<=bthickness);
@@ -395,8 +395,7 @@ for c3=1:numtimesteps
     Em,En,Ep,levelsV,vcoef,st,eust,Re);
         
     %Now solve for new pressure
-    [p,perr(c3)]=multigPRESSUREprod3Dper3(dt,h,p,uhalfx,uhalfy,uhalfz,Edens,Em,En,Ep,levelsP,pcoef,eust);
-   
+    [p,perr(c3)]=multigPRESSUREprod3Dper4(dt,h,p,uhalfx,uhalfy,uhalfz,Edens,Em,En,Ep,levelsP,pcoef,eust);
     %Solve for the new velocity profile u
     [ux,uy,uz]=DS_Vel(ux,uy,uz,p,eust,dt,h,Edens,Em,En,Ep,uhalfx,uhalfy,uhalfz);
     
