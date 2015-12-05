@@ -1,5 +1,5 @@
-function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz]=LagrForce(X,xlength,ylength,zlength,matind,colind,rowind,Break,v0,U...
-    ,Xrv,Yrv,Zrv,dt,K,d0,b,Xdist,Ydist,Zdist,A,XFe,YFe,ZFe,stuckt,stuckb,t,Intx,Inty,Intz)
+function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,Dtemp]=LagrForce(X,xlength,ylength,zlength,matind,colind,rowind,Break,v0,U...
+    ,Xrv,Yrv,Zrv,dt,K,d0,b,Xdist,Ydist,Zdist,A,XFe,YFe,ZFe,stuckt,stuckb,t,Intx,Inty,Intz,Dtempm)
     
     Zdistr=zeros(size(Zdist));
     Zdistl=Zdistr;
@@ -36,10 +36,10 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz]=
         matind=find(A);
         Break=Break+1;
     end
-    Dtemp=(D-d0).*K./D;
-    Fx=Xdist.*Dtemp;
-    Fy=Ydist.*Dtemp;
-    Fz=Zdist.*Dtemp;
+    Dtemp=(D-d0)./D;
+    Fx=K.*Xdist.*Dtemp;
+    Fy=K.*Ydist.*Dtemp;
+    Fz=K.*Zdist.*Dtemp;
     
     Fx(~A)=0;
     Fy(~A)=0;
@@ -72,7 +72,7 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz]=
     dYFe(matind)=(YFe(colind)-YFe(rowind)).*(Ydist(matind))./D(matind)./d0(matind);
     dZFe(matind)=(ZFe(colind)-ZFe(rowind)).*(Zdist(matind))./D(matind)./d0(matind);
 
-    Int=2;
+    Int=3;
     M=1;
     
     if M==1
@@ -154,32 +154,25 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz]=
             
             %integral form of maxwell model with integration by parts and
             %piecewise linear approximation of the strain 
-            Intx=Intx+XFb.*exp(t*b./K)*dt;
-            Inty=Inty+YFb.*exp(t*b./K)*dt;
-            Intz=Intz+ZFb.*exp(t*b./K)*dt;
+            L=K./b;
+            L(~A)=0;
+            
+            Int=Intx;
+            Int=Int.*exp(-L*dt)+exp(-L*dt).*(Dtemp.*(exp(L*dt)-1-dt*L)+Dtempm.*(1+exp(L*dt)).*(L*dt-1))./(L.*L*dt);
 
-            XFet=exp(-t*b./K).*Intx;
-            YFet=exp(-t*b./K).*Inty;
-            ZFet=exp(-t*b./K).*Intz;
+            Int(~A)=0; 
+            Int(isnan(Int))=0;
+            
+            XFet=(K.*Dtemp-K.*L.*Int).*Xdist;
+            YFet=(K.*Dtemp-K.*L.*Int).*Ydist;
+            ZFet=(K.*Dtemp-K.*L.*Int).*Zdist;
 
-            XFet(~A)=0;    Fx(stuckt,:)=0;     Fx(stuckb,:)=0;
-            YFet(~A)=0;    Fy(stuckt,:)=0;     Fy(stuckb,:)=0;
-            ZFet(~A)=0;    Fz(stuckt,:)=0;     Fz(stuckb,:)=0;
-            XFet(isnan(XFet))=0;    XFb(stuckb,:)=0;    XFb(stuckt,:)=0;   
-            YFet(isnan(YFet))=0;    YFb(stuckb,:)=0;    YFb(stuckt,:)=0;
-            ZFet(isnan(ZFet))=0;    ZFb(stuckb,:)=0;    ZFb(stuckt,:)=0;
-            Intx(~A)=0;    Inty(~A)=0;         Intz(~A)=0;
-            Intx(isnan(Intx))=0; Inty(isnan(Inty))=0; Intz(isnan(Intz))=0;
-
-            XFe=exp(-t*b./K).*Intx;
-            YFe=exp(-t*b./K).*Inty;
-            ZFe=exp(-t*b./K).*Intz;
-
-            XFe(~A)=0;  XFe(isnan(XFe))=0;
-            YFe(~A)=0;  YFe(isnan(YFe))=0;  
-            ZFe(~A)=0;  ZFe(isnan(ZFe))=0;
+            XFe=XFet;
+            YFe=YFet;
+            ZFe=ZFet;
             XFe(stuckt,:)=0; XFe(stuckb,:)=0;
             YFe(stuckt,:)=0; YFe(stuckb,:)=0;
             ZFe(stuckt,:)=0; ZFe(stuckb,:)=0;
+            Intx=Int;
         end
     end

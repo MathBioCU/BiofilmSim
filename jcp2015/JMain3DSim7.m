@@ -30,7 +30,9 @@ X(:,1)=X(:,1)-min(X(:,1));
 X(:,2)=X(:,2)-min(X(:,2));
 
 
-h=mdim/32;%64 should be min, this is the hx hy, and hz
+levelsV=-log2(dx);
+levelsP=-log2(dx);
+h=mdim*dx;%64 should be min, this is the hx hy, and hz
 %%%%%%%%%%%%%dimensional constants
 
 co = min(1.2, abs(0.09/(0.0120*log(w)+0.0465)));% approximate correction to try to keep strain amp const over various frequencies
@@ -97,7 +99,7 @@ Xupper=X(X(:,3)>=ylength-bthickness,:);
 
 Xlower=X(X(:,3)<=bthickness,:);
 
- %X=[0,0,0];% use to test without biofilm
+%X=[0,0,0];% use to test without biofilm
 
 
 lower=find(X(:,3)<=bthickness);
@@ -120,6 +122,7 @@ Zdist=A;
 Intx=A*0;
 Inty=A*0;
 Intz=A*0;
+Dtemp=A*0;
 U=zeros(numOfPoints,3);
 %next the initials for the eulerian points
 XrelVel=Xdist;
@@ -142,10 +145,10 @@ uz=ux;
 uxs=ux; uys=uy; uzs=uz;
 
 %for comparison without biofilm to exact oscillatory solution
- kw=(w/(2*visc0/rho0))^(1/2);
- for i=1:Em
-     uz(i,:,:)=sqrt(real(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2+imag(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2).*sin(angle(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))));
- end
+ %kw=(w/(2*visc0/rho0))^(1/2);
+ %for i=1:Em
+ %    uz(i,:,:)=sqrt(real(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2+imag(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2).*sin(angle(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))));
+ %end
 
 
 p0=0;
@@ -327,8 +330,8 @@ uzm=uz;
 
 dx=h;
     
-%uz(1,:,:)=0;
-%uz(Em,:,:)=(exp(2*c3*w*dt)-1)*((exp(4*c3*w*dt)-1)*cos(c3*dt)+exp(2*c3*w*dt)*8*sin(c3*w*dt))/(4*(1+exp(2*c3*w*dt))^3);
+uz(1,:,:)=0;
+uz(Em,:,:)=(exp(2*c3*w*dt)-1)*((exp(4*c3*w*dt)-1)*cos(c3*dt)+exp(2*c3*w*dt)*8*sin(c3*w*dt))/(4*(1+exp(2*c3*w*dt))^3);
 uzs(1,:,:)=uz(1,:,:);
 uzs(Em,:,:)=uz(Em,:,:);
 
@@ -378,7 +381,7 @@ for c3=1:numtimesteps
     tstart=tic;
     uz(1,:,:)=0;
 	%Periodic STrain
-    uz(Em,:,:)=sin(w*c3*dt);%(exp(2*time*w)-1)*((exp(4*time*w)-1)*cos(time*w)+exp(2*time*w)*8*sin(time*w))/(4*(1+exp(2*time*w))^3);
+    uz(Em,:,:)=(exp(2*time*w)-1)*((exp(4*time*w)-1)*cos(time*w)+exp(2*time*w)*8*sin(time*w))/(4*(1+exp(2*time*w))^3); %sin(w*c3*dt);
     uzs(1,:,:)=uz(1,:,:);
     uzs(Em,:,:)=uz(Em,:,:);
 
@@ -391,7 +394,7 @@ for c3=1:numtimesteps
 %   end
     speed(c3)=uz(Em,1,1);
     [vcoef,pcoef]=compute_operator(Edens,levelsV,Re,st,viscmat,viscmatmid,dt);
-    [uhalfx,uhalfy,uhalfz,verr(c3)]=multigVEL3D_CGper3(dt,h,ux,uy,uz,uxm,uym,uzm,uhalfx,uhalfy,uhalfz,p,Edens,Efx*fc,Efy*fc,Efz*fc,...
+    [uhalfx,uhalfy,uhalfz,verr(c3)]=multigVEL3D_CGper2(dt,h,ux,uy,uz,uxm,uym,uzm,uhalfx,uhalfy,uhalfz,p,Edens,Efx*fc,Efy*fc,Efz*fc,...
     Em,En,Ep,levelsV,vcoef,st,eust,Re);
         
     %Now solve for new pressure
@@ -419,8 +422,8 @@ for c3=1:numtimesteps
     X((X(:,2)>=ylength),2)=ylength;
     X((X(:,2)<=0),2)=0;   
 
-    [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz]=...
-       LagrForce(X,xlength,ylength,zlength,matind,colind,rowind,Break,v0,U,Xrv,Yrv,Zrv,dt,K,d0,b,Xdist,Ydist,Zdist,A,XFe,YFe,ZFe,stuckt,stuckb,t(c3),Intx,Inty,Intz);
+    [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,Dtemp]=...
+       LagrForce(X,xlength,ylength,zlength,matind,colind,rowind,Break,v0,U,Xrv,Yrv,Zrv,dt,K,d0,b,Xdist,Ydist,Zdist,A,XFe,YFe,ZFe,stuckt,stuckb,t(c3),Intx,Inty,Intz,Dtemp);
  
     %Transfer the new forces and densities to the Eulerian points
     [Efx,Efy,Efz]=transferLtoE3Dper_e2a(h,x,y,z,X,sum(XFe,2),sum(YFe,2),sum(ZFe,2),d0mean,zlength,xlength);

@@ -15,7 +15,7 @@ Euse=Edens{1}.Edensin;
 
 %update the boundary for uhalfx and uhalfy
 
-coef1=eust*dt/h./Euse;
+coef1=0.5*eust*dt/h./Euse;
 uhalfz(Em,:,2:Epm)=uz(Em,:,2:Epm)+coef1(Em,:,2:Epm).*(p(Em,:,3:Ep)-p(Em,:,1:Epmm));
 uhalfz(1,:,2:Epm)=uz(1,:,2:Epm)+coef1(1,:,2:Epm).*(p(1,:,3:Ep)-p(1,:,1:Epmm));
 uhalfz(Em,:,Ep)=uz(Em,:,Ep)+coef1(Em,:,Ep).*(p(Em,:,2)-p(Em,:,Ep));

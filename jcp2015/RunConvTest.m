@@ -1,8 +1,8 @@
 clc
-%clear all 
+clear
 
 %profile on
-w=4.991;
+w=49.91;
 B01=0;
 
 uxx=cell(1,4);
@@ -11,21 +11,22 @@ uzz=uxx;
 Xx=uxx;
 Pp=uxx;
 
-T=0;
-S=1;
+T=1;
+S=0;
 if T==1
 %temporal convergence tests
     for ii=1:4
         %w=fr(i);
         b=B01;
         E=0.000000;
-
+        
+        dx=1/32;
         dt=1/(250*2^(ii-1));
         dt=dt/w;
         numtimesteps=125*2^(ii-1);
         charLength=10*10^-6;
         fmax=25000;
-        addlvisc=249;
+        addlvisc=500;
         connectdist=3/18.5;
         sigma0=0;
         JMain3DSim7
@@ -44,7 +45,7 @@ if T==1
         str6=num2str(addlvisc);
         str7=num2str(sigma0);
         runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_conv'];
-        save([runid,'.mat'])
+     %   save([runid,'.mat'])
         Complete='Complete';
         G1s=num2str(G1);
         G2s=num2str(G2);
@@ -93,7 +94,9 @@ if T==1
     D2=log2(d1/d2);
     D3=log2(d2/d3);
     
-elseif S==1
+    save('ConvergenceTestTimeBiofilm.mat');
+end    
+if S==1
     uz_exact=cell(1,4);
 
 %spatial convergence test
@@ -104,10 +107,10 @@ elseif S==1
         dx=1/(16*2^(ii-1));
         dt=1/(500);
         dt=dt/w;
-        numtimesteps=250;
+        numtimesteps=100;
         charLength=10*10^-6;
         fmax=25000;
-        addlvisc=249;
+        addlvisc=500;
         connectdist=3/18.5;
         sigma0=0;
         JMain3DSim7
@@ -132,7 +135,7 @@ elseif S==1
         str6=num2str(addlvisc);
         str7=num2str(sigma0);
         runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_conv'];
-        save([runid,'.mat'])
+      %  save([runid,'.mat'])
         Complete='Complete';
         G1s=num2str(G1);
         G2s=num2str(G2);
@@ -172,12 +175,13 @@ elseif S==1
     e2=sqrt(sum(sum(sum((uzz{3}-uz_exact{3}).^2*(2*h)^3))));
     e3=sqrt(sum(sum(sum((uzz{4}-uz_exact{4}).^2*(h)^3))));
     
-    E0=log2(e1/e2);
-    E1=log2(e2/e3);
-    E3=log2(e3/e4);
+    E0=log2(e0/e1);
+    E1=log2(e1/e2);
+    E2=log2(e2/e3);
 
 end
 
+save('ConvergenceTestSpaceBiofilm.mat')
 %p=profile('info');
 %save profile_results p;
 %profile off
