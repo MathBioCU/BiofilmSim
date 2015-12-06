@@ -17,7 +17,7 @@ levelsP=5;
 
 mult=10^-6;
 charLength=10*10^-6;
-[Xb,Yb,Zb]=importfile('~/Documents/Biofilm_Research/Data/37DegTest2LiveCells.txt');
+[Xb,Yb,Zb]=importfile('37 Deg Test 2, Live Cells.txt');
 X=[Xb,Zb,Yb]*mult/charLength;
 
 mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2))]);
@@ -25,6 +25,7 @@ mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2
 xlength=mdim*1;%width of the tube
 ylength=mdim*3;%height of the tube
 zlength=mdim;%length of the tube for the computational domain
+
 X(:,3)=X(:,3)-min(X(:,3));
 X(:,1)=X(:,1)-min(X(:,1));
 X(:,2)=X(:,2)-min(X(:,2));
@@ -143,13 +144,6 @@ ux=zeros(Em,En,Ep);
 uy=ux;
 uz=ux;
 uxs=ux; uys=uy; uzs=uz;
-
-%for comparison without biofilm to exact oscillatory solution
- %kw=(w/(2*visc0/rho0))^(1/2);
- %for i=1:Em
- %    uz(i,:,:)=sqrt(real(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2+imag(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2).*sin(angle(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))));
- %end
-
 
 p0=0;
 p=zeros(Em,En,Ep);%constant pressure
@@ -335,6 +329,19 @@ uz(Em,:,:)=(exp(2*c3*w*dt)-1)*((exp(4*c3*w*dt)-1)*cos(c3*dt)+exp(2*c3*w*dt)*8*si
 uzs(1,:,:)=uz(1,:,:);
 uzs(Em,:,:)=uz(Em,:,:);
 
+%for comparison without biofilm to exact oscillatory solution
+ %kw=(w/(2*visc0/rho0))^(1/2);
+ %for i=1:Em
+ %    uz(i,:,:)=sqrt(real(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2+imag(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2).*sin(angle(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))));
+ %end
+ 
+ %vortex decay problem
+%n=4;
+%k=visc0/rho0;
+%ux=sin(n*pi*x).*cos(n*pi*z);
+%uz=-cos(n*pi*x).*sin(n*pi*z);
+%p=cos(2*pi*n*x)+cos(2*pi*n*z);
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Sim_1.254_95_0_500.mat'); i.e. to loop data from previous simulation
 % c31=c3;
@@ -381,7 +388,9 @@ for c3=1:numtimesteps
     tstart=tic;
     uz(1,:,:)=0;
 	%Periodic STrain
-    uz(Em,:,:)=(exp(2*time*w)-1)*((exp(4*time*w)-1)*cos(time*w)+exp(2*time*w)*8*sin(time*w))/(4*(1+exp(2*time*w))^3); %sin(w*c3*dt);
+    uz(Em,:,:)=(exp(2*time*w)-1)*((exp(4*time*w)-1)*cos(time*w)+exp(2*time*w)*8*sin(time*w))/(4*(1+exp(2*time*w))^3); 
+    %uz(Em,:,:)=sin(w*c3*dt);
+    
     uzs(1,:,:)=uz(1,:,:);
     uzs(Em,:,:)=uz(Em,:,:);
 
@@ -400,7 +409,7 @@ for c3=1:numtimesteps
     %Now solve for new pressure
     [p,perr(c3)]=multigPRESSUREprod3Dper4(dt,h,p,uhalfx,uhalfy,uhalfz,Edens,Em,En,Ep,levelsP,pcoef,eust);
     %Solve for the new velocity profile u
-    [ux,uy,uz]=DS_Vel(ux,uy,uz,p,eust,dt,h,Edens,Em,En,Ep,uhalfx,uhalfy,uhalfz);
+    [ux,uy,uz]=DS_Vel2(ux,uy,uz,p,eust,dt,h,Edens,Em,En,Ep,uhalfx,uhalfy,uhalfz);
     
 
     %Transfer the velocity to the Lagrangian points

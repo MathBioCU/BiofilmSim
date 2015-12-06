@@ -2,7 +2,7 @@ clc
 clear
 
 %profile on
-w=49.91;
+w=4.991;
 B01=0;
 
 uxx=cell(1,4);
@@ -11,8 +11,8 @@ uzz=uxx;
 Xx=uxx;
 Pp=uxx;
 
-T=1;
-S=0;
+T=0;
+S=1;
 if T==1
 %temporal convergence tests
     for ii=1:4
