@@ -13,17 +13,19 @@ Pp=uxx;
 
 T=0;
 S=1;
+
+TS=[16, 47, 140];
 if T==1
 %temporal convergence tests
-    for ii=1:4
+    for ii=1:3
         %w=fr(i);
         b=B01;
         E=0.000000;
         
         dx=1/32;
-        dt=1/(250*2^(ii-1));
+        dt=1/(250*3^(ii-1));
         dt=dt/w;
-        numtimesteps=125*2^(ii-1);
+        numtimesteps=TS(i);%125*2^(ii-1);
         charLength=10*10^-6;
         fmax=25000;
         addlvisc=500;
@@ -100,7 +102,7 @@ if S==1
     uz_exact=cell(1,4);
 
 %spatial convergence test
-    for ii=1:4
+    for ii=1:3
         %w=fr(i);
         b=B01;
         E=0.000000;
