@@ -2,7 +2,7 @@ clc
 clear
 
 %profile on
-w=4.991;
+w=49.91;
 B01=0;
 
 uxx=cell(1,4);
@@ -11,13 +11,13 @@ uzz=uxx;
 Xx=uxx;
 Pp=uxx;
 
-T=0;
-S=1;
+T=1;
+S=0;
 
-TS=[16, 47, 140];
+TS=[16, 47, 140,419];
 if T==1
 %temporal convergence tests
-    for ii=1:3
+    for ii=1:4
         %w=fr(i);
         b=B01;
         E=0.000000;
@@ -25,7 +25,7 @@ if T==1
         dx=1/32;
         dt=1/(250*3^(ii-1));
         dt=dt/w;
-        numtimesteps=TS(i);%125*2^(ii-1);
+        numtimesteps=125*2^(ii-1);%TS(ii);
         charLength=10*10^-6;
         fmax=25000;
         addlvisc=500;
@@ -149,15 +149,15 @@ if S==1
 
     Eu1=sqrt(sum(sum(sum(((interpolate2htoh3D(uxx{1})-uxx{2}).^2+(interpolate2htoh3D(uyy{1})-uyy{2}).^2+(interpolate2htoh3D(uzz{1})-uzz{2}).^2)*(4*h)^3))));
     Eu2=sqrt(sum(sum(sum(((interpolate2htoh3D(uxx{2})-uxx{3}).^2+(interpolate2htoh3D(uyy{2})-uyy{3}).^2+(interpolate2htoh3D(uzz{2})-uzz{3}).^2)*(2*h)^3))));
-    Eu3=sqrt(sum(sum(sum(((interpolate2htoh3D(uxx{3})-uxx{4}).^2+(interpolate2htoh3D(uyy{3})-uyy{4}).^2+(interpolate2htoh3D(uzz{3})-uzz{4}).^2)*h^3))));
+  %  Eu3=sqrt(sum(sum(sum(((interpolate2htoh3D(uxx{3})-uxx{4}).^2+(interpolate2htoh3D(uyy{3})-uyy{4}).^2+(interpolate2htoh3D(uzz{3})-uzz{4}).^2)*h^3))));
 
     Ep1=sqrt(sum(sum(sum(((interpolate2htoh3D(Pp{1})-Pp{2}).^2)*(4*h)^3))));
     Ep2=sqrt(sum(sum(sum(((interpolate2htoh3D(Pp{2})-Pp{3}).^2)*(2*h)^3))));
-    Ep3=sqrt(sum(sum(sum(((interpolate2htoh3D(Pp{3})-Pp{4}).^2)*h^3))));
+   % Ep3=sqrt(sum(sum(sum(((interpolate2htoh3D(Pp{3})-Pp{4}).^2)*h^3))));
 
     Ex1=sqrt(sum(sum(sum(((Xx{1}-Xx{2}).^2)*h^3))));
     Ex2=sqrt(sum(sum(sum(((Xx{2}-Xx{3}).^2)*h^3))));
-    Ex3=sqrt(sum(sum(sum(((Xx{3}-Xx{4}).^2)*h^3))));
+    %Ex3=sqrt(sum(sum(sum(((Xx{3}-Xx{4}).^2)*h^3))));
 
     Ru1=log2(Eu1/Eu2);
     Ru2=log2(Eu2/Eu3);

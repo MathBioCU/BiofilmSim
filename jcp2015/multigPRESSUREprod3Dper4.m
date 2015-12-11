@@ -92,12 +92,12 @@ c=0;
 % pp(1)=perr;
 while perr>allowerr && count1<1 && c<6
 %     pp(c+1)=perr;
-tic
-    for c5=1:5
+%tic
+    for c5=1:5 %5 iterations since this approximately solves the problem most times, reduces number of residuals that must be computed
         pnew=mvPRESSUREprod3Dper4(pnew,rhsfixed2,h,Edens,levels,pcoef);
         pnew=pnew-mean(mean(mean(pnew(:,1:Enm,1:Epm))));
     end
-    toc
+ %   toc
     
     r=residualPRESSUREprod3Dper4(pnew,rhsfixed2,pcoef{1});
     perr=max(max(max(abs(r))));

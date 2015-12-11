@@ -342,11 +342,7 @@ uzs(Em,:,:)=uz(Em,:,:);
 %uz=-cos(n*pi*x).*sin(n*pi*z);
 %p=cos(2*pi*n*x)+cos(2*pi*n*z);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% load('Sim_1.254_95_0_500.mat'); i.e. to loop data from previous simulation
-% c31=c3;
 c31=1;
-
 %numtimesteps=10+10*numtimesteps;
 %dt=dt/w/10;
 %timefreq=1;
@@ -377,9 +373,14 @@ end
 
 speed=zeros(numtimesteps,1);
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%clear
+% load('testSim_w12.54_f27_b0.0002_visc150_dt550.mat'); %i.e. to start with data from previous simulation
+% c31=c3;
 
-for c3=1:numtimesteps  
-    c3
+
+for c3=c31:numtimesteps  
+    fprintf('timestep %d\n',c3);
    %dt=dts(c3);
    time=time+dt;
    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -403,7 +404,7 @@ for c3=1:numtimesteps
 %   end
     speed(c3)=uz(Em,1,1);
     [vcoef,pcoef]=compute_operator(Edens,levelsV,Re,st,viscmat,viscmatmid,dt);
-    [uhalfx,uhalfy,uhalfz,verr(c3)]=multigVEL3D_CGper2(dt,h,ux,uy,uz,uxm,uym,uzm,uhalfx,uhalfy,uhalfz,p,Edens,Efx*fc,Efy*fc,Efz*fc,...
+    [uhalfx,uhalfy,uhalfz,verr(c3)]=multigVEL3D_CGper4(dt,h,ux,uy,uz,uxm,uym,uzm,uhalfx,uhalfy,uhalfz,p,Edens,Efx*fc,Efy*fc,Efz*fc,...
     Em,En,Ep,levelsV,vcoef,st,eust,Re);
         
     %Now solve for new pressure
@@ -433,11 +434,16 @@ for c3=1:numtimesteps
 
     [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,Dtemp]=...
        LagrForce(X,xlength,ylength,zlength,matind,colind,rowind,Break,v0,U,Xrv,Yrv,Zrv,dt,K,d0,b,Xdist,Ydist,Zdist,A,XFe,YFe,ZFe,stuckt,stuckb,t(c3),Intx,Inty,Intz,Dtemp);
- 
+    if (sum(sum(isnan(XFet)))>0 || sum(sum(isnan(YFet)))>0 || sum(sum(isnan(ZFet)))>0)
+        fprintf('Error, Fx not computed\n');
+        break
+    end
+   
     %Transfer the new forces and densities to the Eulerian points
     [Efx,Efy,Efz]=transferLtoE3Dper_e2a(h,x,y,z,X,sum(XFe,2),sum(YFe,2),sum(ZFe,2),d0mean,zlength,xlength);
     [Efxt,Efyt,Efzt]=transferLtoE3Dper_e2a(h,x,y,z,X(stuckt,:),sum(XFet(stuckt,:),2),sum(YFet(stuckt,:),2),sum(ZFet(stuckt,:),2),d0mean,zlength,xlength);
-
+   
+    
     [Edens,viscmat,viscmatmid]=DensVisc(addlvisc,addldens,h,x,y,z,X,visc,numOfnonzero,xlength,zlength,Em,En,Ep,d0mean,initdensity,levelsV,viscmat,Edens);        
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -478,11 +484,15 @@ for c3=1:numtimesteps
     if mod(c3,100)==0
         str1=num2str(w);
 	str2=num2str(fmax/1000);
-	str3=num2str(B01);
+	str3=num2str(B01/1000);
 	str4=num2str(1/(dt*w));
 	str5=num2str(c3/100);
-        runid=['testSim_',str1,'_',str2,'_',str3,'_',str4];
+    str6=num2str(addlvisc);
+        runid=['testSim_w',str1,'_f',str2,'_b',str3,'_visc',str6,'_dt',str4];
         save([runid,'.mat']);
+     
+    PlotStressStrain;
+    pause(0.1);
     end
     	
 end

@@ -71,7 +71,7 @@ phnew=ph;
     
     phnew(:,:,1)=phnew(:,:,Ep);
 
-    phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
+  %  phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
 
     
     
@@ -110,7 +110,7 @@ phnew=ph;
     phnew(:,:,1)=phnew(:,:,Ep);
 
     
-        phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
+       % phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
 
     
     phnew(3:2:Emmm,2:2:Enm,3:2:Epmm)=rhsfixed(2:2:Emmmm,1:2:Enmm,2:2:Epmmm)+pcoef.coefpp1(2:2:Emmmm,1:2:Enmm,2:2:Epmmm).*phnew(3:2:Emmm,3:2:En,3:2:Epmm)+...
@@ -125,7 +125,7 @@ phnew=ph;
         pcoef.coefpm3(2:2:Emmmm,1:2:Enmm,Epm).*phnew(3:2:Emmm,2:2:Enm,Epm);
     phnew(:,:,1)=phnew(:,:,Ep);
     
-        phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
+    %    phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
 
     
     phnew(1,2:2:Enm,3:2:Epmm)=2*rhsfixedboundB(1,1:2:Enmm,2:2:Epmmm)+pcoef.coefpp1boundB(1,1:2:Enmm,2:2:Epmmm).*phnew(1,3:2:En,3:2:Epmm)+...
@@ -153,7 +153,7 @@ phnew=ph;
 
     phnew(:,:,1)=phnew(:,:,Ep);
 
-        phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
+       % phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
 
     
     
@@ -194,7 +194,7 @@ phnew=ph;
     
     phnew(:,:,1)=phnew(:,:,Ep);
 
-        phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
+     %   phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
 
     
     %black odd pgs
@@ -244,7 +244,7 @@ phnew=ph;
 
     phnew(:,:,1)=phnew(:,:,Ep);
     
-        phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
+     %   phnew=phnew-mean(mean(mean(phnew(:,1:Enm,1:Epm))));
 
 
     %creases 

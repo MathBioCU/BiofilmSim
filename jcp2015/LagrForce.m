@@ -73,7 +73,7 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
     dZFe(matind)=(ZFe(colind)-ZFe(rowind)).*(Zdist(matind))./D(matind)./d0(matind);
 
     Int=3;
-    M=1;
+    M=3;
     
     if M==1
         %Hooke's Law
@@ -158,7 +158,7 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
             L(~A)=0;
             
             Int=Intx;
-            Int=Int.*exp(-L*dt)+exp(-L*dt).*(Dtemp.*(exp(L*dt)-1-dt*L)+Dtempm.*(1+exp(L*dt)).*(L*dt-1))./(L.*L*dt);
+            Int=Int.*exp(-L*dt)+exp(-L*dt).*(Dtemp-Dtempm.*(1+dt*L)+exp(dt*L).*(Dtempm+Dtemp.*(-1+dt*L)))./(L.*L*dt);
 
             Int(~A)=0; 
             Int(isnan(Int))=0;
@@ -166,7 +166,11 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
             XFet=(K.*Dtemp-K.*L.*Int).*Xdist;
             YFet=(K.*Dtemp-K.*L.*Int).*Ydist;
             ZFet=(K.*Dtemp-K.*L.*Int).*Zdist;
-
+            
+            XFet(~A)=0;  XFet(isnan(XFet))=0;
+            YFet(~A)=0;  YFet(isnan(YFet))=0;  
+            ZFet(~A)=0;  ZFet(isnan(ZFet))=0;
+            
             XFe=XFet;
             YFe=YFet;
             ZFe=ZFet;
