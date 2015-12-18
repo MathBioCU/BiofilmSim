@@ -12,7 +12,7 @@ Efz=Efy;
 
 
 
-rc=1/30;
+rc=1/40;
 coef=1/rc^3;
 
 for c1=1:length(X(:,1))

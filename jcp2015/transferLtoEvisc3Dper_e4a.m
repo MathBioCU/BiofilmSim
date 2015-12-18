@@ -9,7 +9,7 @@ z=z(:,1:En-1,1:Ep-1);
 viscmat=visc*ones(size(x));
 
 
-rc=1/30;
+rc=1/40;
 rc=rc*2^(lev-1);
 % dzero=.1;%this is the distance that the viscosity covers (the radius of the support of viscosity) .1=5microns 
 

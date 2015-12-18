@@ -73,7 +73,7 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
     dZFe(matind)=(ZFe(colind)-ZFe(rowind)).*(Zdist(matind))./D(matind)./d0(matind);
 
     Int=3;
-    M=3;
+    M=1;
     
     if M==1
         %Hooke's Law
@@ -163,9 +163,9 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
             Int(~A)=0; 
             Int(isnan(Int))=0;
             
-            XFet=(K.*Dtemp-K.*L.*Int).*Xdist;
-            YFet=(K.*Dtemp-K.*L.*Int).*Ydist;
-            ZFet=(K.*Dtemp-K.*L.*Int).*Zdist;
+            XFet=(1.05*K.*Dtemp-K.*L.*Int).*Xdist;
+            YFet=(1.05*K.*Dtemp-K.*L.*Int).*Ydist;
+            ZFet=(1.05*K.*Dtemp-K.*L.*Int).*Zdist;
             
             XFet(~A)=0;  XFet(isnan(XFet))=0;
             YFet(~A)=0;  YFet(isnan(YFet))=0;  

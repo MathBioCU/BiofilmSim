@@ -10,7 +10,7 @@ z=z(:,1:En-1,1:Ep-1);
 Edens=initdensity*ones(size(x));
 
 
-rc=1/30;
+rc=1/40;
 coef=addldens*8;%change both to cubed for 3d;
 
 % coef1=addldens;

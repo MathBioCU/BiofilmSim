@@ -28,7 +28,7 @@ else
     v2hy=v2hx;
     v2hz=v2hx;
 
-    [v2hx,v2hy,v2hz]=mvVEL3Dper4(v2hx,v2hy,v2hz,restricthto2h3DVper2(fxres),restricthto2h3DVper2(fyres),restricthto2h3DVper2(fzres),h2,Edens,levels,vcoef);
+    [v2hx,v2hy,v2hz]=mvVEL3Dper4(v2hx,v2hy,v2hz,restricthto2h3DVper2_mex(fxres),restricthto2h3DVper2_mex(fyres),restricthto2h3DVper2_mex(fzres),h2,Edens,levels,vcoef);
     if lev==1
     	[vhx,vhy,vhz]=relaxVEL3Dper3_mex(vhx+interpolate2htoh3D(v2hx),vhy+interpolate2htoh3D(v2hy),vhz+interpolate2htoh3D(v2hz),fhx,fhy,fhz,vcoef{lev},numrel2);
     else

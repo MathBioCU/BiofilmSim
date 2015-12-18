@@ -36,7 +36,7 @@ end
 %     [v2hx,v2hy,v2hz]=fmvVEL3D(v2hx,v2hy,v2hz,f2hxres,f2hyres,f2hzres,h2,Edens,levels,vcoef);
 %     end
 %     [vhx,vhy,vhz]=relaxVEL3D(vhx+interpolate2htoh3D(v2hx),vhy+interpolate2htoh3D(v2hy),vhz+interpolate2htoh3D(v2hz),fhx,fhy,fhz,2,vcoef{lev});
-    [v2hx,v2hy,v2hz]=fmvVEL3Dper4(v2hx,v2hy,v2hz,restricthto2h3DVper2(fxres),restricthto2h3DVper2(fyres),restricthto2h3DVper2(fzres),h2,Edens,levels,vcoef);
+    [v2hx,v2hy,v2hz]=fmvVEL3Dper4(v2hx,v2hy,v2hz,restricthto2h3DVper2_mex(fxres),restricthto2h3DVper2_mex(fyres),restricthto2h3DVper2_mex(fzres),h2,Edens,levels,vcoef);
     [vhx,vhy,vhz]=mvVEL3Dper4(vhx+interpolate2htoh3D(v2hx),vhy+interpolate2htoh3D(v2hy),vhz+interpolate2htoh3D(v2hz),fhx,fhy,fhz,h,Edens,levels,vcoef);
 %     for i=1:1
 %     [vhx,vhy,vhz]=mvVEL3D(vhx,vhy,vhz,fhx,fhy,fhz,h,Edens,levels,vcoef);

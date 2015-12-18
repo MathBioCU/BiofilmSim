@@ -3,6 +3,7 @@ plot(fStrain(1:c3))
 str = ['Strain, \omega=', num2str(w)];
 title(str);
 hold on
+
 [mstrain,tstrain]=max(fStrain);
 plot(tstrain*[1,1],[0,mstrain],'k');
 plot((1:c3),0*(1:c3),'k');

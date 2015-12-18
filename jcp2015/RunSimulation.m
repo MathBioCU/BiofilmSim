@@ -1,19 +1,20 @@
 clc
 % clear all 
+
 fr=49.91;
 %profile on
 clear;
 clc;
 for i=1:1
-    w=39.64;
+    w=12.54;
     dt=1/550;
     dt=dt/w;
     dx=1/32;
-    numtimesteps=5000;
+    numtimesteps=4500;
     charLength=10*10^-6;
     fmax=28000;
-    addlvisc=150;
-    b=0.2;  %b should be fairly small before there is a significant difference i.e. 0.001. 
+    addlvisc=350;
+    b=0;  %b should be fairly small before there is a significant difference i.e. 0.001. 
     B01=b;
     E=0;
     E01=E;
@@ -29,7 +30,8 @@ for i=1:1
     str6=num2str(addlvisc);
     str7=num2str(sigma0);
     str8=datestr(datetime,'mm-dd-yy');
-    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'wSAR2_test',str8];
+    str9=num2str(e0);
+    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'wSAR2_test',str8];
     save([runid,'.mat'])
     Complete='Complete';
     G1s=num2str(G1);

@@ -37,7 +37,7 @@ h=mdim*dx;%64 should be min, this is the hx hy, and hz
 %%%%%%%%%%%%%dimensional constants
 
 co = min(1.2, abs(0.09/(0.0120*log(w)+0.0465)));% approximate correction to try to keep strain amp const over various frequencies
-e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/0.90;  
+e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/1.1;  
 v0=e0*w;%speed at the middle
 visc0=10^-3;%this is dynamic viscosity of water, units of kg/m/s
 rho0=998;%9.983*10^(-7);%in units of kg/m^3
@@ -375,9 +375,17 @@ speed=zeros(numtimesteps,1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %clear
-% load('testSim_w12.54_f27_b0.0002_visc150_dt550.mat'); %i.e. to start with data from previous simulation
-% c31=c3;
-
+%clc
+% load('testSim_w25.01_f28_b0.0004_visc125_dt550.mat'); %i.e. to start with data from previous simulation
+% c31=c3; 
+%extra_steps=0;
+%numtimesteps=numtimesteps+extra_steps; %if continuing on an old simulation, must add to number of time steps
+%speed=[speed, zeros(1,extra_steps)];
+%eShear=[eShear,zeros(1,extra_steps)];
+%vShear=[vShear,zeros(1,extra_steps)];
+%vShear2=[vShear2,zeros(1,extra_steps)];
+%fStrain=[fStrain,zeros(1,extra_steps)];
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
 for c3=c31:numtimesteps  
     fprintf('timestep %d\n',c3);
@@ -452,7 +460,7 @@ for c3=c31:numtimesteps
     vShear(c3) =sum(sum(sum(viscmat{1}(Em-11:Emm,1:Enm,1:Epm).*(uz(Em-10:Em,1:Enm,1:Epm)-uz(Em-12:Emmm,1:Enm,1:Epm)))))/(2*dx)*dx^3/(xlength*10*h*zlength);
     vShear2(c3) =sum(sum(sum(viscmat{1}(Em-5:Emm,1:Enm,1:Epm).*(uz(Em-4:Em,1:Enm,1:Epm)-uz(Em-6:Emmm,1:Enm,1:Epm)))))/(2*dx)*dx^3/(xlength*5*h*zlength);
 
-	Shear_Force(c3)=-eShear(c3)*dx^3-vShear(c3)*dx^3;
+	%Shear_Force(c3)=-eShear(c3)*dx^3-vShear(c3)*dx^3;
 
     [fStrain(c3),S,S0] = Calculate_Strains3(S,ux,uy,uz,S0,dt,st,xlength,ylength,zlength,h,x,y,z);
 

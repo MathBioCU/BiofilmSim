@@ -1,6 +1,6 @@
-function Edens=transferLtoEdens3Dper_e2a(h,x,y,z,X,initdensity,addldens,d0mean,numOfnonzero,zlength,xlength)
+function Edens=transferLtoEdens3Dper_e4a(h,x,y,z,X,initdensity,addldens,d0mean,numOfnonzero,zlength,xlength)
 
-
+%has a maximum density of rho_b+rho_0
 
 [Em,En,Ep]=size(x);
 x=x(:,1:En-1,1:Ep-1);%this accounts for the fact that the first and last page are actually the same due to periodicity
@@ -10,7 +10,7 @@ z=z(:,1:En-1,1:Ep-1);
 Edens=initdensity*ones(size(x));
 
 
-rc=1/30;
+rc=1/50;
 coef=addldens*8;%change both to cubed for 3d;
 
 % coef1=addldens;

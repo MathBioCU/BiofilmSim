@@ -6,7 +6,7 @@ y=y(:,1:En-1,1:Ep-1);
 z=z(:,1:En-1,1:Ep-1); 
 
 
-rc=1/30;
+rc=1/40;
 coef=h^3/rc^3;
 
 for c1=1:size(X,1)
