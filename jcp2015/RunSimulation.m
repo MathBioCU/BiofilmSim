@@ -6,19 +6,22 @@ fr=49.91;
 clear;
 clc;
 for i=1:1
-    w=12.54;
-    dt=1/550;
+    ShearRotation=1;
+    ComplianceModulus=0;
+    DynamicModuli=0;
+    w=1;
+    dt=1/4000;
     dt=dt/w;
     dx=1/32;
-    numtimesteps=4500;
+    numtimesteps=2000;
     charLength=10*10^-6;
     fmax=28000;
     addlvisc=350;
-    b=0;  %b should be fairly small before there is a significant difference i.e. 0.001. 
+    b=0.4;  %b should be fairly small before there is a significant difference i.e. 0.001. 
     B01=b;
     E=0;
     E01=E;
-    sigma0=0.0;
+    sigma0=0;
     connectdist=0.162;
     JMain3DSim7
     [G1,G2,Delta,max_stress,min_stress]=Analyze_Data2_3D(w,w*dt,e0,v0*visc0/charLength*vShear-eShear,fStrain,numtimesteps);
@@ -31,7 +34,7 @@ for i=1:1
     str7=num2str(sigma0);
     str8=datestr(datetime,'mm-dd-yy');
     str9=num2str(e0);
-    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'wSAR2_test',str8];
+    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'wShearRotation3_testZ3',str8];
     save([runid,'.mat'])
     Complete='Complete';
     G1s=num2str(G1);

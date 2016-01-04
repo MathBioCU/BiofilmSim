@@ -17,13 +17,13 @@ levelsP=5;
 
 mult=10^-6;
 charLength=10*10^-6;
-[Xb,Yb,Zb]=importfile('37 Deg Test 2, Live Cells.txt');
+[Xb,Yb,Zb]=importfile('37 Deg Test 4, Live Cells.txt');
 X=[Xb,Zb,Yb]*mult/charLength;
 
 mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2))]);
 
-xlength=mdim*1;%width of the tube
-ylength=mdim*3;%height of the tube
+xlength=mdim;%width of the tube
+ylength=mdim*2;%height of the tube
 zlength=mdim;%length of the tube for the computational domain
 
 X(:,3)=X(:,3)-min(X(:,3));
@@ -37,8 +37,8 @@ h=mdim*dx;%64 should be min, this is the hx hy, and hz
 %%%%%%%%%%%%%dimensional constants
 
 co = min(1.2, abs(0.09/(0.0120*log(w)+0.0465)));% approximate correction to try to keep strain amp const over various frequencies
-e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/1.1;  
-v0=e0*w;%speed at the middle
+e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/0.9;  
+v0=0.001;%e0*w;%speed at the middle
 visc0=10^-3;%this is dynamic viscosity of water, units of kg/m/s
 rho0=998;%9.983*10^(-7);%in units of kg/m^3
 %v0=sigma0*dt/charLength/h/rho0;
@@ -73,7 +73,7 @@ tend=numtimesteps*dt;
 
 bthickness=0.04; %thickness of region where bacteria are adhered to walls
 
-X=X(X(:,1)>0,:);
+X=X(X(:,1)>0.2,:);
 X=X(X(:,1)<xlength,:);
 X=X(X(:,2)>0,:);
 X=X(X(:,2)<zlength,:);
@@ -87,12 +87,36 @@ X=X(X(:,3)>=0,:);
 %so that all of the biofilm nodes in are center of flow
 %may also want to restrict x and z directions too
 
-%X=X(X(:,1)<xlength-0.2,:);
-%X=X(X(:,1)>0.2,:);
-%X=X(X(:,2)>0.2,:);
-%X=X(X(:,2)<zlength-0.2,:);
-%X=X(X(:,3)<=ylength-0.7,:);
-%X=X(X(:,3)>=0.7,:);
+if ShearRotation==1
+    zlength=zlength*2;
+    xvec=0:h:xlength;
+    yvec=0:h:ylength;
+    zvec=0:h:zlength;
+
+    [x,y,z]=meshgrid(xvec,yvec,zvec);
+
+    X(:,2)=X(:,2)+0.4;
+    X=X(X(:,1)<xlength-0.2,:);
+    X=X(X(:,1)>0.2,:);
+    X=X(X(:,2)>0.4,:);
+    X=X(X(:,2)<zlength-0.8,:);
+    X=X(X(:,3)<=ylength-0.4,:);
+    X=X(X(:,3)>=0.4,:);
+    mX=mean(X);
+    Z=X-ones(length(X),1)*mX;
+    Z=Z*pca(Z);
+    Z=Z+ones(length(X),1)*[xlength/2,zlength/2,ylength/2];
+    X=Z;
+    X=X(1:110,:);
+    
+   
+    X=X(X(:,1)<xlength-0.2,:);
+    X=X(X(:,1)>0.2,:);
+    X=X(X(:,2)>0.4,:);
+    X=X(X(:,2)<zlength-0.8,:);
+    X=X(X(:,3)<=ylength-0.4,:);
+    X=X(X(:,3)>=0.4,:);
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -325,7 +349,7 @@ uzm=uz;
 dx=h;
     
 uz(1,:,:)=0;
-uz(Em,:,:)=(exp(2*c3*w*dt)-1)*((exp(4*c3*w*dt)-1)*cos(c3*dt)+exp(2*c3*w*dt)*8*sin(c3*w*dt))/(4*(1+exp(2*c3*w*dt))^3);
+uz(Em,:,:)=0;%(exp(2*c3*w*dt)-1)*((exp(4*c3*w*dt)-1)*cos(c3*dt)+exp(2*c3*w*dt)*8*sin(c3*w*dt))/(4*(1+exp(2*c3*w*dt))^3);
 uzs(1,:,:)=uz(1,:,:);
 uzs(Em,:,:)=uz(Em,:,:);
 
@@ -365,27 +389,37 @@ for i=301:340
 	dts(i)=dt/(5-(i-300)/10);
 end
 dts(341:end)=dt;
-time=0;
-times=zeros(numtimesteps+1,1);
-for i=2:numtimesteps+1
-	times(i)=times(i-1)+dts(i-1);
+
+for i=1:numtimesteps
+    dts(i)=dt/100*i;
 end
 
+time=0;
+times=zeros(numtimesteps,1);
+for i=2:numtimesteps
+	times(i)=times(i-1)+dts(i-1);
+end
 speed=zeros(numtimesteps,1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%clear
-%clc
-% load('testSim_w25.01_f28_b0.0004_visc125_dt550.mat'); %i.e. to start with data from previous simulation
-% c31=c3; 
-%extra_steps=0;
-%numtimesteps=numtimesteps+extra_steps; %if continuing on an old simulation, must add to number of time steps
-%speed=[speed, zeros(1,extra_steps)];
-%eShear=[eShear,zeros(1,extra_steps)];
-%vShear=[vShear,zeros(1,extra_steps)];
-%vShear2=[vShear2,zeros(1,extra_steps)];
-%fStrain=[fStrain,zeros(1,extra_steps)];
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+% clear
+% clc
+%  load('testSim_w1_f28_b0.0004_visc350_dt2000_2.mat'); %i.e. to start with data from previous simulation
+%  c31=c3+1; 
+% extra_steps=000;
+% numtimesteps=numtimesteps+extra_steps; %if continuing on an old simulation, must add to number of time steps
+% speed=[speed; zeros(1,extra_steps)'];
+% eShear=[eShear;zeros(1,extra_steps)'];
+% vShear=[vShear;zeros(1,extra_steps)'];
+% vShear2=[vShear2;zeros(1,extra_steps)'];
+% fStrain=[fStrain;zeros(1,extra_steps)'];
+% t=[t,zeros(1,extra_steps)];
+% dts=[dts;zeros(1,extra_steps)'];
+%  for i=numtimesteps+1:numtimesteps+extra_steps
+%      dts(i)=dts(1)*i;
+%  end
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 for c3=c31:numtimesteps  
     fprintf('timestep %d\n',c3);
@@ -397,19 +431,43 @@ for c3=c31:numtimesteps
     tstart=tic;
     uz(1,:,:)=0;
 	%Periodic STrain
-    uz(Em,:,:)=(exp(2*time*w)-1)*((exp(4*time*w)-1)*cos(time*w)+exp(2*time*w)*8*sin(time*w))/(4*(1+exp(2*time*w))^3); 
+    if DynamicModuli==1
+        uz(Em,:,:)=(exp(2*time*w)-1)*((exp(4*time*w)-1)*cos(time*w)+exp(2*time*w)*8*sin(time*w))/(4*(1+exp(2*time*w))^3); 
     %uz(Em,:,:)=sin(w*c3*dt);
-    
+    elseif ComplianceModulus==1
+    %    Compliance
+        if c3>1
+            accel=((2./(1+exp(-155*time))-1)*sigma0+eShear(c3-1)-v0*visc0/charLength*vShear(c3-1))*(xlength*zlength)/(rho0*sum(sum(sum(Edens{1}.Edensin(Em-10:Em,:,:))))*(charLength*h^3))/v0*(0.20*h^3);
+            accel2=3/2*accel-1/2*accelm;
+            accelm=accel;
+            
+            uz(Em,:,:)=uzm(Em,:,:)+dt*accel; %jumps in dt cause wiggling due to force overshooting
+            uz2=uzm(Em,1,1)+dt*accel2;
+            uz3=uz2;
+            if (c3>2)
+                uz3=3/2*speed(c3-1)-1/2*speed(c3-2);
+            end
+            
+            dt=min(0.9*dt*0.00025/(max(abs(uz(Em,1,1)-uz2),abs(uz(Em,1,1)-uz3))),dts(c3));
+            uz(Em,:,:)=uzm(Em,:,:)+dt*accel;
+            
+            time=time-dts(c3)+dt;
+             dts(c3)=dt;
+            times(c3)=times(c3-1)+dts(c3);
+           
+        %%try to adjust dt at jumps in dt to avoid oscillations. Done by assuming that dt=dts(c3-1) so that no jump in acceleration suddenly occurs
+        else
+            accelm=0;
+            uz(Em,:,:)=uzm(Em,:,:)+dt*(2./(1+exp(-155*time))-1)*sigma0/(rho0*sum(sum(sum(Edens{1}.Edensin(Em-10:Em,:,:)))))/(charLength*h)/v0;
+        end
+    elseif ShearRotation==1
+        uz(Em,:,:)=1;
+        uz(1,:,:)=-1;
+    end
+
     uzs(1,:,:)=uz(1,:,:);
     uzs(Em,:,:)=uz(Em,:,:);
-
-%    Compliance
-%    if c3>1
-%    	uz(Em,:,:)=uzm(Em,:,:)+dts(c3)*((2./(1+exp(-55*w*time))-1)*sigma0+eShear(c3-1)-v0*visc0/charLength*vShear(c3-1))/(rho0*sum(sum(Edens{1}.Edensin(Em,:,:))))/(charLength*h)/v0; %jumps in dt cause wiggling due to force overshooting
-%	%try to adjust dt at jumps in dt to avoid wiggling around there. Done by assuming that dt=dts(c3-1) so that no jump in acceleration suddenly occurs
-%    else
-%	uz(Em,:,:)=uzm(Em,:,:)+dt*(2./(1+exp(-55*w*time))-1)*sigma0/rho0/charLength/1000;
-%   end
+    
     speed(c3)=uz(Em,1,1);
     [vcoef,pcoef]=compute_operator(Edens,levelsV,Re,st,viscmat,viscmatmid,dt);
     [uhalfx,uhalfy,uhalfz,verr(c3)]=multigVEL3D_CGper4(dt,h,ux,uy,uz,uxm,uym,uzm,uhalfx,uhalfy,uhalfz,p,Edens,Efx*fc,Efy*fc,Efz*fc,...
@@ -491,16 +549,21 @@ for c3=c31:numtimesteps
     end
     if mod(c3,100)==0
         str1=num2str(w);
-	str2=num2str(fmax/1000);
-	str3=num2str(B01/1000);
-	str4=num2str(1/(dt*w));
-	str5=num2str(c3/100);
-    str6=num2str(addlvisc);
+        str2=num2str(fmax/1000);
+        str3=num2str(B01/1000);
+        str4=num2str(1/(dts(end)*w));
+        str5=num2str(c3/100);
+        str6=num2str(addlvisc);
         runid=['testSim_w',str1,'_f',str2,'_b',str3,'_visc',str6,'_dt',str4];
-        save([runid,'.mat']);
-     
-    PlotStressStrain;
-    pause(0.1);
+        save([runid,'_4.mat']);
+        if DynamicModuli==1 
+            PlotStressStrain;
+        elseif ComplianceModulus==1
+            PlotCompliance;
+        elseif ShearRotation==1
+           scatter3(X(:,1),X(:,3),X(:,2),'k.') 
+        end
+        pause(0.1);
     end
     	
 end
