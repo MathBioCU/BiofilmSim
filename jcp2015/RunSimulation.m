@@ -6,11 +6,11 @@ fr=49.91;
 clear;
 clc;
 for i=1:1
-    ShearRotation=1;
+    ShearRotation=0;
     ComplianceModulus=0;
-    DynamicModuli=0;
-    w=1;
-    dt=1/4000;
+    DynamicModuli=1;
+    w=40;
+    dt=1/550;
     dt=dt/w;
     dx=1/32;
     numtimesteps=2000;
@@ -34,7 +34,7 @@ for i=1:1
     str7=num2str(sigma0);
     str8=datestr(datetime,'mm-dd-yy');
     str9=num2str(e0);
-    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'wShearRotation3_testZ3',str8];
+    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'wShearRotation3_testZ5',str8];
     save([runid,'.mat'])
     Complete='Complete';
     G1s=num2str(G1);

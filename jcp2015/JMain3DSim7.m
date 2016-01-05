@@ -17,13 +17,13 @@ levelsP=5;
 
 mult=10^-6;
 charLength=10*10^-6;
-[Xb,Yb,Zb]=importfile('37 Deg Test 4, Live Cells.txt');
+[Xb,Yb,Zb]=importfile('37 Deg Test 2, Live Cells.txt');
 X=[Xb,Zb,Yb]*mult/charLength;
 
 mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2))]);
 
 xlength=mdim;%width of the tube
-ylength=mdim*2;%height of the tube
+ylength=mdim*3;%height of the tube
 zlength=mdim;%length of the tube for the computational domain
 
 X(:,3)=X(:,3)-min(X(:,3));
