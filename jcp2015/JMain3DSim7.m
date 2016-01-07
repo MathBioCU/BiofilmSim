@@ -37,8 +37,11 @@ h=mdim*dx;%64 should be min, this is the hx hy, and hz
 %%%%%%%%%%%%%dimensional constants
 
 co = min(1.2, abs(0.09/(0.0120*log(w)+0.0465)));% approximate correction to try to keep strain amp const over various frequencies
-e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/0.9;  
-v0=0.001;%e0*w;%speed at the middle
+e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/0.9; %0.9  
+v0=e0*w;%speed at the middle
+if ShearRotation==1
+    v0=0.001;
+end
 visc0=10^-3;%this is dynamic viscosity of water, units of kg/m/s
 rho0=998;%9.983*10^(-7);%in units of kg/m^3
 %v0=sigma0*dt/charLength/h/rho0;
@@ -404,9 +407,9 @@ speed=zeros(numtimesteps,1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % clear
 % clc
-%  load('testSim_w1_f28_b0.0004_visc350_dt2000_2.mat'); %i.e. to start with data from previous simulation
+%  load('w1_f20_b0.2_cnd0.162_visc350_dt2222.2222_sigma0.1_e03.8632_wCompliance2_testZ_01-07-16.mat'); %i.e. to start with data from previous simulation
 %  c31=c3+1; 
-% extra_steps=000;
+% extra_steps=5000;
 % numtimesteps=numtimesteps+extra_steps; %if continuing on an old simulation, must add to number of time steps
 % speed=[speed; zeros(1,extra_steps)'];
 % eShear=[eShear;zeros(1,extra_steps)'];
@@ -437,7 +440,7 @@ for c3=c31:numtimesteps
     elseif ComplianceModulus==1
     %    Compliance
         if c3>1
-            accel=((2./(1+exp(-155*time))-1)*sigma0+eShear(c3-1)-v0*visc0/charLength*vShear(c3-1))*(xlength*zlength)/(rho0*sum(sum(sum(Edens{1}.Edensin(Em-10:Em,:,:))))*(charLength*h^3))/v0*(0.20*h^3);
+            accel=((2./(1+exp(-10055*time))-1)*sigma0+eShear(c3-1)-v0*visc0/charLength*vShear(c3-1))*(xlength*zlength)/(rho0*sum(sum(sum(Edens{1}.Edensin(Em-10:Em,:,:))))*(charLength*h^3))/v0*(0.15*h^3);
             accel2=3/2*accel-1/2*accelm;
             accelm=accel;
             
@@ -448,7 +451,7 @@ for c3=c31:numtimesteps
                 uz3=3/2*speed(c3-1)-1/2*speed(c3-2);
             end
             
-            dt=min(0.9*dt*0.00025/(max(abs(uz(Em,1,1)-uz2),abs(uz(Em,1,1)-uz3))),dts(c3));
+            dt=min(0.9*dt*0.00025/(max(abs(uz(Em,1,1)-uz2),abs(uz(Em,1,1)-uz3))),min(dts(c3),6.5*10^-4));
             uz(Em,:,:)=uzm(Em,:,:)+dt*accel;
             
             time=time-dts(c3)+dt;
@@ -458,7 +461,7 @@ for c3=c31:numtimesteps
         %%try to adjust dt at jumps in dt to avoid oscillations. Done by assuming that dt=dts(c3-1) so that no jump in acceleration suddenly occurs
         else
             accelm=0;
-            uz(Em,:,:)=uzm(Em,:,:)+dt*(2./(1+exp(-155*time))-1)*sigma0/(rho0*sum(sum(sum(Edens{1}.Edensin(Em-10:Em,:,:)))))/(charLength*h)/v0;
+            uz(Em,:,:)=uzm(Em,:,:)+dt*(2./(1+exp(-10055*time))-1)*sigma0/(rho0*sum(sum(sum(Edens{1}.Edensin(Em-10:Em,:,:)))))/(charLength*h)/v0;
         end
     elseif ShearRotation==1
         uz(Em,:,:)=1;

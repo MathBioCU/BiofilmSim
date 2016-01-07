@@ -9,19 +9,24 @@ for i=1:1
     ShearRotation=0;
     ComplianceModulus=0;
     DynamicModuli=1;
-    w=40;
-    dt=1/550;
+    w=12.54;
+    dt=1/550; %for compliance 1/100000, w=1; for dynamic moduli 1/550; for shear rotation 1/4000,w=1
     dt=dt/w;
     dx=1/32;
-    numtimesteps=2000;
+    numtimesteps=4500; %for compliance 10000, for shear rotation 1500
     charLength=10*10^-6;
-    fmax=28000;
-    addlvisc=350;
-    b=0.4;  %b should be fairly small before there is a significant difference i.e. 0.001. 
+    fmax=20000;
+    addlvisc=450;
+    b=0.2;  %b should be fairly small before there is a significant difference i.e. 0.001. 
     B01=b;
     E=0;
     E01=E;
-    sigma0=0;
+    if ComplianceModulus==1
+        sigma0=0.1;
+    else 
+        sigma0=0;
+    end
+    
     connectdist=0.162;
     JMain3DSim7
     [G1,G2,Delta,max_stress,min_stress]=Analyze_Data2_3D(w,w*dt,e0,v0*visc0/charLength*vShear-eShear,fStrain,numtimesteps);
@@ -34,7 +39,15 @@ for i=1:1
     str7=num2str(sigma0);
     str8=datestr(datetime,'mm-dd-yy');
     str9=num2str(e0);
-    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'wShearRotation3_testZ5',str8];
+    if ComplianceModulus==1
+        str10='wCompliance2_testZ';
+    elseif DynamicModuli==1
+        str10='wSAR2_testZ';
+    elseif ShearRotation==1
+        str10='ShearRotation_testZ';
+    end
+    
+    runid=['w',str1,'_f',str2,'_b',str3,'_cnd',str5,'_visc',str6,'_dt',str4,'_sigma',str7,'_e0',str9,'_',str10,'_',str8];
     save([runid,'.mat'])
     Complete='Complete';
     G1s=num2str(G1);

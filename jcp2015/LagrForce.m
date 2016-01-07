@@ -163,7 +163,7 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
             Int(~A)=0; 
             Int(isnan(Int))=0;
             
-            c=1.05; %1.00 for Maxwell, >1 for Zener (1.05)
+            c=2.0; %1.00 for Maxwell, >1 for Zener (1.05)
             XFet=(c*K.*Dtemp-K.*L.*Int).*Xdist;
             YFet=(c*K.*Dtemp-K.*L.*Int).*Ydist;
             ZFet=(c*K.*Dtemp-K.*L.*Int).*Zdist;

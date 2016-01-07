@@ -5,5 +5,5 @@ title(str);
 
 subplot(2,1,2)
 plot(times(1:c3),v0*visc0/charLength*vShear(1:c3)-eShear(1:c3))
-str = ['Stress, \omega=', num2str(w)];
+str = ['Stress, \omega=', num2str(w), 'time=',time];
 title(str);
