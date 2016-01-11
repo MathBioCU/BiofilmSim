@@ -28,14 +28,14 @@ function [XFe,YFe,ZFe,XFet,YFet,ZFet,Break,rowind,colind,matind,Intx,Inty,Intz,D
     DSq=Xdist.^2+Ydist.^2+Zdist.^2;
     D=sqrt(DSq);
     
-    breakind=find(D>2*d0);
-    if ~isempty(breakind)
-
-        A(breakind)=0;
-        [rowind,colind]=find(A);
-        matind=find(A);
-        Break=Break+1;
-    end
+%     breakind=find(D>2*d0);
+%     if ~isempty(breakind)
+% 
+%         A(breakind)=0;
+%         [rowind,colind]=find(A);
+%         matind=find(A);
+%         Break=Break+1;
+%     end
     Dtemp=(D-d0)./D;
     Fx=K.*Xdist.*Dtemp;
     Fy=K.*Ydist.*Dtemp;

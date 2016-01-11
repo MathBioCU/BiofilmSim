@@ -22,7 +22,7 @@ X=[Xb,Zb,Yb]*mult/charLength;
 
 mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2))]);
 
-xlength=mdim;%width of the tube
+xlength=mdim*1;%width of the tube
 ylength=mdim*3;%height of the tube
 zlength=mdim;%length of the tube for the computational domain
 
@@ -71,6 +71,7 @@ yvec=0:h:ylength;
 zvec=0:h:zlength;
 
 [x,y,z]=meshgrid(xvec,yvec,zvec);
+px=x; py=y; pz=z;
 
 tend=numtimesteps*dt;
 
@@ -357,10 +358,11 @@ uzs(1,:,:)=uz(1,:,:);
 uzs(Em,:,:)=uz(Em,:,:);
 
 %for comparison without biofilm to exact oscillatory solution
- %kw=(w/(2*visc0/rho0))^(1/2);
- %for i=1:Em
- %    uz(i,:,:)=sqrt(real(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2+imag(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2).*sin(angle(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))));
- %end
+%  kw=(w/(2*visc0/rho0))^(1/2);
+%  for i=1:Em
+%     uz(i,:,:)=sqrt(real(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2+imag(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))).^2).*sin(angle(sinh(kw*y(i,:,:)*charLength*(1+sqrt(-1)))/sinh(kw*ylength*charLength*(1+sqrt(-1)))));
+%  end
+%  uzm=uz;
  
  %vortex decay problem
 %n=4;
@@ -451,7 +453,7 @@ for c3=c31:numtimesteps
                 uz3=3/2*speed(c3-1)-1/2*speed(c3-2);
             end
             
-            dt=min(0.9*dt*0.00025/(max(abs(uz(Em,1,1)-uz2),abs(uz(Em,1,1)-uz3))),min(dts(c3),6.5*10^-4));
+            dt=min(0.9*dt*0.00025/(max(abs(uz(Em,1,1)-uz2),abs(uz(Em,1,1)-uz3))),min(dts(c3),6*10^-4));
             uz(Em,:,:)=uzm(Em,:,:)+dt*accel;
             
             time=time-dts(c3)+dt;
@@ -554,11 +556,11 @@ for c3=c31:numtimesteps
         str1=num2str(w);
         str2=num2str(fmax/1000);
         str3=num2str(B01/1000);
-        str4=num2str(1/(dts(end)*w));
+        str4=num2str(1/(dt*w));
         str5=num2str(c3/100);
         str6=num2str(addlvisc);
         runid=['testSim_w',str1,'_f',str2,'_b',str3,'_visc',str6,'_dt',str4];
-        save([runid,'_4.mat']);
+        save([runid,'2.mat']);
         if DynamicModuli==1 
             PlotStressStrain;
         elseif ComplianceModulus==1

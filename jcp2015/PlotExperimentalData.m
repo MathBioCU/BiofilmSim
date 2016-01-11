@@ -1,4 +1,4 @@
-load('../../DynamicModuliData.mat');
+load('../../Miscellaneous/DynamicModuliData.mat');
 
 figure(1)
 P1=loglog(AngFreq,G1_86,'-b');

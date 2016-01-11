@@ -9,8 +9,8 @@ for i=1:1
     ShearRotation=0;
     ComplianceModulus=0;
     DynamicModuli=1;
-    w=12.54;
-    dt=1/550; %for compliance 1/100000, w=1; for dynamic moduli 1/550; for shear rotation 1/4000,w=1
+    w=1.254;
+    dt=1/; %for compliance 1/100000, w=1; for dynamic moduli 1/550; for shear rotation 1/4000,w=1
     dt=dt/w;
     dx=1/32;
     numtimesteps=4500; %for compliance 10000, for shear rotation 1500
@@ -22,7 +22,7 @@ for i=1:1
     E=0;
     E01=E;
     if ComplianceModulus==1
-        sigma0=0.1;
+        sigma0=0.2;
     else 
         sigma0=0;
     end
@@ -42,7 +42,7 @@ for i=1:1
     if ComplianceModulus==1
         str10='wCompliance2_testZ';
     elseif DynamicModuli==1
-        str10='wSAR2_testZ';
+        str10='wSAR1_testZ2';
     elseif ShearRotation==1
         str10='ShearRotation_testZ';
     end
