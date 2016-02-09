@@ -9,11 +9,11 @@ for i=1:1
     ShearRotation=0;
     ComplianceModulus=0;
     DynamicModuli=1;
-    w=1.254;
-    dt=1/1500; %for compliance 1/100000, w=1; for dynamic moduli 1/550; for shear rotation 1/4000,w=1
+    w=39.64;
+    dt=1/550; %for compliance 1/100000, w=1; for dynamic moduli 1/550; for shear rotation 1/4000,w=1
     dt=dt/w;
     dx=1/32;
-    numtimesteps=12000; %for compliance 10000, for shear rotation 1500
+    numtimesteps=4500; %for compliance 10000, for shear rotation 1500
     charLength=10*10^-6;
     fmax=20000;
     addlvisc=450;

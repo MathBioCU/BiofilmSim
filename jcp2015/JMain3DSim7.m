@@ -37,7 +37,7 @@ h=mdim*dx;%64 should be min, this is the hx hy, and hz
 %%%%%%%%%%%%%dimensional constants
 
 co = min(1.2, abs(0.09/(0.0120*log(w)+0.0465)));% approximate correction to try to keep strain amp const over various frequencies
-e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/0.9; %0.9  
+e0=ylength/1.8*4*4.5*10*10^-6*tan(0.13)*co/1.0; %0.9  
 v0=e0*w;%speed at the middle
 if ShearRotation==1
     v0=0.001;
@@ -539,11 +539,11 @@ for c3=c31:numtimesteps
     Xrstore=[Xrstore,Xreal];
     toc(tstart)
     if mod(c3,10000)==0
-        uxsave=[uxsave, ux];
-        uysave=[uysave,uy];
-        uzsave=[uzsave,uz];
-        psave=[psave, p];
-        Xstore=[Xstore, X];
+        %uxsave=[uxsave, ux];
+        %uysave=[uysave,uy];
+        %uzsave=[uzsave,uz];
+        %psave=[psave, p];
+        %Xstore=[Xstore, X];
         
 %         vsave=[vsave, viscmat{1}];
 %         densave=[densave, Edens{1}.Edensin]; 
