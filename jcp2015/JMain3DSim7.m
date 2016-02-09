@@ -17,7 +17,9 @@ levelsP=5;
 
 mult=10^-6;
 charLength=10*10^-6;
-[Xb,Yb,Zb]=importfile('37 Deg Test 2, Live Cells.txt');
+%[Xb,Yb,Zb]=importfile('37 Deg Test 2, Live Cells.txt');
+Xb=rand(100,1); Yb=rand(100,1); Zb=rand(100,1);
+fprintf('Using random data. Experimental data for initializing the model will be available shortly\n');
 X=[Xb,Zb,Yb]*mult/charLength;
 
 mdim=min([max(X(:,1))-min(X(:,1)),max(X(:,3))-min(X(:,3)), max(X(:,2))-min(X(:,2))]);
